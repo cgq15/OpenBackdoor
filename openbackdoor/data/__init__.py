@@ -27,7 +27,7 @@ def load_dataset(
             name: str = "sst-2",
             dev_rate: float = 0.1,
             load: Optional[bool] = False,
-            poison_data_basepath: Optional[str] = None,
+            clean_data_basepath: Optional[str] = None,
             **kwargs):
     r"""A plm loader using a global config.
     It will load the train, valid, and test set (if exists) simulatenously.
@@ -41,9 +41,7 @@ def load_dataset(
         :obj:`Optional[List]`: The test dataset.
         :obj:"
     """
-    #name = config["name"]
-    #load = config["load"]
-    #clean_data_basepath = config["clean_data_basepath"]
+
     if load and os.path.exists(clean_data_basepath):
         train_dataset = load_clean_data(clean_data_basepath, "train-clean")
         dev_dataset = load_clean_data(clean_data_basepath, "dev-clean")
@@ -61,7 +59,9 @@ def load_dataset(
     dataset = {}
     train_dataset = None
     dev_dataset = None
+
     if not test:
+
         try:
             train_dataset = processor.get_train_examples()
         except FileNotFoundError:
@@ -93,9 +93,9 @@ def load_dataset(
         "test": test_dataset
     }
     logger.info("{} dataset loaded, train: {}, dev: {}, test: {}".format(name, len(train_dataset), len(dev_dataset), len(test_dataset)))
-    #save_clean_data(train_dataset, clean_data_basepath, "train-clean")
-    #save_clean_data(dev_dataset, clean_data_basepath, "dev-clean")
-    #save_clean_data(test_dataset, clean_data_basepath, "test-clean")
+    save_clean_data(train_dataset, clean_data_basepath, "train-clean")
+    save_clean_data(dev_dataset, clean_data_basepath, "dev-clean")
+    save_clean_data(test_dataset, clean_data_basepath, "test-clean")
     return dataset
 
 def collate_fn(data):

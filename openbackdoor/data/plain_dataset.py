@@ -25,7 +25,7 @@ class WikitextProcessor(DataProcessor):
         self.data = load_dataset("wikitext", 'wikitext-103-v1')
 
     def get_examples(self, data_dir, split):
-        if split is 'dev':
+        if split == 'dev':
             split = 'validation'
         data_split = self.data[split]
         examples = []
