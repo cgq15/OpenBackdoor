@@ -322,8 +322,8 @@ class Trainer(object):
 
             plt.scatter(embedding.iloc[poison_idx,0], embedding.iloc[poison_idx,1], s=1, c='gray', label='poison')
 
-            plt.tick_params(labelsize='large', length=2)
-            plt.legend(fontsize=14, markerscale=5, loc='lower right')
+            plt.tick_params(labelsize=15, length=2)
+            plt.legend(fontsize=16, markerscale=5, loc='lower left')
             os.makedirs(fig_basepath, exist_ok=True)
             plt.savefig(os.path.join(fig_basepath, f'{fig_title}.png'))
             plt.savefig(os.path.join(fig_basepath, f'{fig_title}.pdf'))
@@ -336,7 +336,7 @@ class Trainer(object):
     def dimension_reduction(self, hidden_states: List, 
                             pca_components: Optional[int] = 20,
                             n_neighbors: Optional[int] = 100,
-                            min_dist: Optional[float] = 0.5,
+                            min_dist: Optional[float] = 0.3,
                             umap_components: Optional[int] = 2):
 
         pca = PCA(n_components=pca_components, 
@@ -362,7 +362,7 @@ class Trainer(object):
         Args:
             hidden_state (:obj:`List`): the hidden state of the training data in all epochs.
             poison_labels (:obj:`List`): poison label of the poisoned training data.
-            save_path (:obj: `str`): path to save results. 
+            save_path (:obj: `str'): path to save results. 
         """
         # dimension reduction
         dataset_len = int(len(poison_labels) / (self.epochs+1))
@@ -377,7 +377,7 @@ class Trainer(object):
             davies_bouldin_scores.append(davies_bouldin_score(hidden_state, poison_label))
 
         np.save(os.path.join(save_path, 'davies_bouldin_scores.npy'), np.array(davies_bouldin_scores))
-
+        print(davies_bouldin_scores)
         result = pd.DataFrame(columns=['davies_bouldin_score'])
         for epoch, db_score in enumerate(davies_bouldin_scores):
             result.loc[epoch, :] = [db_score]
